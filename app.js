@@ -89,14 +89,17 @@ class UI {
                    //get product from products
 
                    let cartItem = {...Storage.getProduct( id ),amount:1};
-                   
-                   cart = [...cart,cartItem];
-                   Storage.saveCart( cart );
-                   
-                   
                    //Add porduct to the cart
-                   //Save the cart in the local storage.
-                   //set cart values
+                   cart = [...cart,cartItem];
+                    //Save the cart in the local storage.
+                   Storage.saveCart( cart );
+                    //set cart values
+                    this.setCartValues( cart );
+                    this.addCartItemDOM( cart );
+                   
+                   
+                  
+                  
                    //Display cart item.
                    // Show the cart
                 });
@@ -105,6 +108,40 @@ class UI {
         });
 
 }
+
+setCartValues( cart ) {
+    let tempTotal = 0;
+    let itemsTotal = 0;
+    cart.map( item => {
+        tempTotal += item.price * item.amount;
+        itemsTotal += item.amount;
+    });
+    cartTotal.innerText = parseFloat(tempTotal.toFixed(2))
+    cartItems.innerText = itemsTotal;
+   
+
+}
+addCartItemDOM( item ) {
+    const div = document.createElement( 'div' );
+    div.classList.add( 'cart-item' );
+    div.innerHTML =`
+    <img src="${item.image}">
+    <div>
+        <h4>${item.title}</h4>
+        <h5>${item.price}</h5>
+        <span class="remove-item" data-id=${item.id}>remove</span>
+    </div>
+    <div>
+        <i class="fas fa-chevron-up" data-id=${item.id}></i>
+        <p class="item-amount">${item.amount}</p>
+        <i class="fas fa-chevron-down" data-id=${item.id}></i>
+    </div>
+    `;
+    cartContent.appendChild( div );
+    console.log( cartContent);
+}
+
+
 }
 //local storage
 class Storage {
